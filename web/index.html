@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Fashion Search RAG</title>
+  <style>
+    body{font-family:system-ui,Arial;margin:24px;line-height:1.4}
+    .card{border:1px solid #ddd;border-radius:12px;padding:16px;margin:12px 0}
+    input,button{font-size:16px;padding:10px;border-radius:8px;border:1px solid #ccc}
+    button{cursor:pointer}
+    .row{display:flex;gap:8px;flex-wrap:wrap}
+    .meta{color:#555;font-size:14px}
+    pre{white-space:pre-wrap}
+  </style>
+</head>
+<body>
+  <h1>Fashion Search RAG</h1>
+  <div class="row">
+    <input id="q" placeholder="Type your query... e.g. women cotton midi dress under 2000" style="flex:1;min-width:280px" />
+    <button onclick="run()">Search</button>
+  </div>
+  <div id="results"></div>
+  <script>
+    async function run(){
+      const query = document.getElementById('q').value.trim();
+      if(!query){ alert('Enter a query'); return; }
+      const results = document.getElementById('results');
+      results.innerHTML = 'Running...';
+      try {
+        const res = await fetch('http://127.0.0.1:8000/query', {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ query, top_k:20, top_m:3 })
+        });
+        const data = await res.json();
+        results.innerHTML = `
+          <div class="card">
+            <h2>Final Answer</h2>
+            <pre>${(data.answer||'').replace(/[<>&]/g, m => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[m]))}</pre>
+          </div>
+          <div class="card">
+            <h2>Top 3 Results</h2>
+            ${data.hits.map((h,i)=>`
+              <div style="margin-bottom:12px">
+                <strong>${i+1}. ${h.meta?.title || '(Untitled)'} — ${h.meta?.brand || ''}</strong><br/>
+                <span class="meta">score=${h.score.toFixed(3)} | ${h.meta?.category||''} ${h.meta?.subcategory||''} ${h.meta?.color||''}</span>
+                <div>${(h.text||'').slice(0,400)}...</div>
+              </div>
+            `).join('')}
+          </div>`;
+      } catch(e){
+        results.innerHTML = 'Error: ' + e;
+      }
+    }
+  </script>
+</body>
+</html>
