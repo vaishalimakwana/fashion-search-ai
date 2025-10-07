@@ -28,6 +28,7 @@ To generate the vector database (not included due to size):
 ```bash
 python src/data_prep.py --csv data/myntra_fashion_dataset.csv
 python src/index.py
+```
 
 ## Screenshots produced
 - 3 images for Search Layer (top 3 hits per query): `outputs/query_{i}_search.png`
