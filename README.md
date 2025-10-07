@@ -14,7 +14,7 @@
 python -m venv .venv && source .venv/bin/activate  # (Windows: .venv\Scripts\activate)
 pip install -r requirements.txt
 
-# 1) Put your Myntra CSV into data/, e.g. data/myntra.csv
+# 1) Put your Myntra CSV into data/, e.g. data/myntra_fashion_dataset.csv
 # 2) Prepare data → build index
 python src/data_prep.py --csv data/myntra.csv
 python src/index.py
@@ -22,6 +22,12 @@ python src/index.py
 # 3) Run the sample queries end-to-end (will produce 6 PNGs under outputs/)
 python src/app_cli.py
 ```
+
+## Building the Vector Store
+To generate the vector database (not included due to size):
+```bash
+python src/data_prep.py --csv data/myntra_fashion_dataset.csv
+python src/index.py
 
 ## Screenshots produced
 - 3 images for Search Layer (top 3 hits per query): `outputs/query_{i}_search.png`
