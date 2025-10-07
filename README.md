@@ -30,7 +30,7 @@ python src/data_prep.py --csv data/myntra_fashion_dataset.csv
 python src/index.py
 ```
 
-## Screenshots produced
+## Screenshots produced - 6 screenshots in file named - "outputs"
 - 3 images for Search Layer (top 3 hits per query): `outputs/query_{i}_search.png`
 - 3 images for Generation Layer (final answers): `outputs/query_{i}_answer.png`
 
